@@ -1,0 +1,165 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1c423258-7c70-4242-9455-0fad13ef8ebd",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1nQz1CbzipEOw---pqrJlcOnI95TvSg-tu7UliYBDd6A",
+          "mode": "list",
+          "cachedResultName": "Leave",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nQz1CbzipEOw---pqrJlcOnI95TvSg-tu7UliYBDd6A/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1nQz1CbzipEOw---pqrJlcOnI95TvSg-tu7UliYBDd6A/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        220,
+        0
+      ],
+      "id": "140b8cbd-9e6b-4dd9-ad3e-d29d7ccc400f",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "7JICqSl4Z6JIYeIW",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=I have a dataset , your task is to analyse the data and check whether the person is apllicable for the leave or not , you can compare the availed leave with the anual quota and return the response as email as they are applicable for the leave this is the data : {{ $json['Employee Name'] }} ,{{ $json.Department }} , {{ $json['Email Address'] }} , {{ $json['Leave Type'] }} , {{ $json['Annual Quota'] }} , {{ $json['Availed Leave'] }}\n\njust return the email content",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        600,
+        0
+      ],
+      "id": "3c05cd09-e96c-4e83-9a7a-f65bd63c721f",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        600,
+        220
+      ],
+      "id": "ac78b395-f540-48cf-91e2-0de51ba2d08f",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ONcmcvQlkRqhLrmW",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Google Sheets').item.json['Email Address'] }}",
+        "subject": "Reg : Leave Request",
+        "message": "={{ $json['output'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        960,
+        0
+      ],
+      "id": "4e535d26-250c-4f79-81e2-73d0765ccc28",
+      "name": "Gmail",
+      "webhookId": "1aa2d25f-9a74-4948-b842-32598e94fdef",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "unj5JnEGGtlmzZdt",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0e4b24fd-63c1-4ce5-ad4d-80632b5b5234",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "7a7b9a42d230d1ccdfe26d067f36fa3c4bcb2569138b8b067899cf2459acf7bc"
+  },
+  "id": "6HwfafdASoOwXknR",
+  "tags": []
+}
