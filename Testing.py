@@ -3,6 +3,13 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import Runnable
 from langchain_core.messages import SystemMessage, HumanMessage
+import logging
+
+# =======================
+# Optional: Set up Logging
+# =======================
+logging.basicConfig()
+logging.getLogger("langchain").setLevel(logging.INFO)
 
 # =======================
 # Set up Gemini API Key
