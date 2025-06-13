@@ -6,3 +6,10 @@ PyPDF2
 faiss-cpu
 sentence-transformers
 transformers
+
+
+streamlit
+langchain
+langchain-google-genai
+duckduckgo-search
+google-generativeai
