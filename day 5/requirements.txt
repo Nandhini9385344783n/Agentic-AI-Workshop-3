@@ -16,10 +16,10 @@ google-generativeai
 
 
 streamlit
-langchain>=0.1.16
-langchain-core>=0.1.44
-langchain-community>=0.0.32
-langchain-google-genai>=0.0.9
+langchain
+langchain-core
+langchain-community
+langchain-google-genai
 faiss-cpu
 transformers
 huggingface-hub
